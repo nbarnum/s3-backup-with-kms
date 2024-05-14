@@ -11,18 +11,12 @@ s3folder=$4
 masterKeyProvider="aws-kms"
 metadataOutput="/tmp/metadata-$(date +%s)"
 
-compress(){
+function compress(){
     gzip --quiet --keep "$1"
 }
 
-encrypt(){
-    # -e encrypt
-    # -i input
-    # -o output
-    # --metadata-output unique file for metadata
-    # -m masterKey read from environment variable
-    # -c encryption context read from the second argument.
-    # -v be verbose
+function encrypt(){
+    # $masterKey is expected to be available as an environment variable
     aws-encryption-cli \
         --encrypt \
         --input "$1" \
@@ -33,7 +27,7 @@ encrypt(){
         -v
 }
 
-s3put (){
+function s3put (){
     # copy file argument 1 to s3 location passed into the script.
     aws s3 cp "$1" "${s3bucket}/${s3folder}/$1"
 }
